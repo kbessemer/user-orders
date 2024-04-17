@@ -1,2 +1,2 @@
-from .post import post
-from .get import get
+from .new import new
+from .lookup import lookup

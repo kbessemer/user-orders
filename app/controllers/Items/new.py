@@ -1,15 +1,15 @@
-from . import items
+from . import blueprint
 from flask import request, jsonify
-from ...services.Items import post
+from ...services.items import new
 
-@items.route('/new', methods=['POST'])
-def items_post():
+@blueprint.route('/new', methods=['POST'])
+def items_new():
     body = request.get_json()
 
     product_name = body["product_name"]
     product_price = body["product_price"]
 
-    new_item = post(product_name, product_price)
+    new_item = new(product_name, product_price)
 
     if new_item:
         return jsonify({

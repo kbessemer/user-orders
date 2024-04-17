@@ -1,7 +1,7 @@
 from ...database import db
 from ...models.item import Item
 
-def post(product_name, product_price):
+def new(product_name, product_price):
     new_item = Item(product_name=product_name, price=product_price)
     
     db.session.add(new_item)

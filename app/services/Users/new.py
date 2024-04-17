@@ -1,7 +1,7 @@
 from ...database import db
 from ...models.user import User
 
-def post(first_name, last_name):
+def new(first_name, last_name):
     new_user = User(first_name=first_name, last_name=last_name)
     
     db.session.add(new_user)

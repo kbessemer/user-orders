@@ -1,24 +1,23 @@
-from . import orders
-from ...services.Users import get
-from ...services.Orders import post
-from ...models.order import Order
+from . import blueprint
+from ...services.users import lookup
+from ...services.orders import new
 
-@orders.route('/new', methods=['POST'])
-def orders_post():
+@blueprint.route('/new', methods=['POST'])
+def orders_new():
     from flask import request, jsonify
     data = request.get_json()
 
     user_id = data['user_id']
-    item_ids = data['item_ids']
+    item_data = data['item_data']
 
-    user = get(user_id)
+    user = lookup(user_id)
     if not user:
         return jsonify({
             "success": False,
             "message": "Failed to find the user"
         }), 404
 
-    order = post(user, item_ids)
+    order = new(user, item_data)
 
     if order:
         return jsonify({

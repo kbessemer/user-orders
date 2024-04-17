@@ -1,26 +1,23 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from .config import Config
 from .database import db
-from .controllers.Items import items
-from .controllers.Orders import orders
-from .controllers.Users import users
+import os
+import importlib
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
     db.init_app(app)
+    Migrate(app, db)
 
-    migrate = Migrate(app, db)
+    controllers_dir = os.path.join(app.root_path, 'controllers')
 
-    from .models.item import Item
-    from .models.order import Order
-    from .models.user import User
+    for filename in os.listdir(controllers_dir):
+        module = importlib.import_module(f'.controllers.{filename}', package='app')
 
-    app.register_blueprint(items)
-    app.register_blueprint(orders)
-    app.register_blueprint(users)
+        if hasattr(module, 'blueprint'):
+            app.register_blueprint(module.blueprint)
 
     return app

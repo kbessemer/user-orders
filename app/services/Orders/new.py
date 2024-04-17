@@ -1,14 +1,20 @@
 from ...models.order import Order
 from ...models.item import Item
+from ...models.order_item import OrderItem
 from ...database import db
 
-def post(user, item_ids):
+
+def new(user, item_data):
     order = Order(user=user)
 
-    for item_id in item_ids:
+    for data in item_data:
+        item_id = data["id"]
+        quantity = data["quantity"]
+        
         item = Item.query.get(item_id)
         if item:
-            order.items.append(item)
+            order_item = OrderItem(item=item, order=order, quantity=quantity)
+            order.items.append(order_item)
     
     db.session.add(order)
     try:

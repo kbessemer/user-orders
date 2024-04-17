@@ -1,10 +1,10 @@
-from . import users
+from . import blueprint
 from flask import request, jsonify
-from ...services.Users import get
+from ...services.users import lookup
 
-@users.route('/lookup/<int:id>', methods=['GET'])
-def users_get(id):
-    user = get(id)
+@blueprint.route('/lookup/<int:id>', methods=['GET'])
+def users_lookup(id):
+    user = lookup(id)
 
     if user:
         user_data = {
@@ -17,13 +17,16 @@ def users_get(id):
         for order in user.orders:
             order_data = {
                 "order_id": order.id,
+                "order_date": order.order_date,
                 "items": []
             }
 
             for item in order.items:
                 item_data = {
-                    "product_name": item.product_name,
-                    "product_price": item.price
+                    "product_name": item.item.product_name,
+                    "product_price": item.item.price,
+                    "quantity": item.quantity,
+                    "reviews": []
                 }
                 order_data["items"].append(item_data)
 

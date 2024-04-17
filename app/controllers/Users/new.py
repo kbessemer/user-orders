@@ -1,15 +1,15 @@
-from . import users
+from . import blueprint
 from flask import request, jsonify
-from ...services.Users import post
+from ...services.users import new
 
-@users.route('/new', methods=['POST'])
-def users_post():
+@blueprint.route('/new', methods=['POST'])
+def users_new():
     body = request.get_json()
 
     first_name = body["first_name"]
     last_name = body["last_name"]
 
-    new_user = post(first_name, last_name)
+    new_user = new(first_name, last_name)
 
     if new_user:
         return jsonify({
