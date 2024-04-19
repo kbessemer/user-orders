@@ -4,26 +4,32 @@ from ...services.items import lookup
 
 @blueprint.route('/lookup/<int:id>', methods=['GET'])
 def items_lookup(id):
-    item = lookup(id)
+    body = request.get_json()
+
+    page = body["page"]
+    page_size = body["page_size"]
+
+    query = lookup(id, page, page_size)
 
     review_data = []
 
-    for review in item.reviews:
+    if query["item"]:
+        for review in query["item"].reviews:
                     data = {
                         "comment": review.comment
                     }
                     review_data.append(data)
 
-    if item:
         return jsonify({
             "success": True,
             "message": "Item found",
             "item": {
-                "id": item.id,
-                "product_name": item.product_name,
-                "product_price": item.price,
+                "id": query["item"].id,
+                "product_name": query["item"].product_name,
+                "product_price": query["item"].price,
                 "reviews": review_data
-            }
+            },
+            "pagination": query["pagination"]
         }), 200
     else:
         return jsonify({

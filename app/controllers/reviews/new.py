@@ -9,14 +9,14 @@ def orders_new():
 
     item_id = data['item_id']
 
-    item = lookup(item_id)
-    if not item:
+    item = lookup(item_id, 1, 5)
+    if not item["item"]:
         return jsonify({
             "success": False,
             "message": "Failed to find the item"
         }), 404
 
-    review = new(item, data)
+    review = new(item["item"], data)
 
     if review:
         return jsonify({
